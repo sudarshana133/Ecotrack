@@ -56,6 +56,21 @@ app.post('/devices/:deviceId/commands', (req, res) => __awaiter(void 0, void 0, 
         res.status(500).json({ message: 'Error controlling the device', error: error.message });
     }
 }));
+app.post("/devices/status", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const deviceId = req.body.deviceId;
+    try {
+        const response = yield axios_1.default.get(`${SMARTTHINGS_API_URL}/devices/${deviceId}/status`, {
+            headers: {
+                Authorization: `Bearer ${process.env.SMARTTHINGS_API_TOKEN}`
+            }
+        });
+        console.log(response);
+        res.status(200).json(response.data);
+    }
+    catch (error) {
+        res.status(500).json(error.message);
+    }
+}));
 app.listen(8000, () => {
     console.log(`App listening on http://localhost:${port}`);
 });
