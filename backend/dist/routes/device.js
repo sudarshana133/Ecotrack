@@ -16,8 +16,10 @@ const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 // get devices
-router.get("/getDevices", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.token;
+router.post("/getDevices", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const token = req.headers.token;
+    const token = req.body.token;
+    console.log(token);
     try {
         const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices`, {
             headers: {
@@ -30,4 +32,22 @@ router.get("/getDevices", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json(error.message);
     }
 }));
+router.post("/getEnergy", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const token = req.headers.token;
+    const deviceId = req.body.deviceId;
+    const token = req.body.token;
+    console.log(deviceId);
+    try {
+        const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`, {
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        });
+        res.status(200).json(devices.data);
+    }
+    catch (error) {
+        res.status(500).json(error.message);
+    }
+}));
 exports.default = router;
+//https://api.smartthings.com/v1/devices/{deviceId}/status  

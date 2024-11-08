@@ -1,6 +1,4 @@
-import React from "react";
 import { Input } from "../../../components/ui/input";
-import { Bell } from "lucide-react";
 import GreyCard from "@/components/GreyCard";
 import BigGreyCard from "@/components/BigGreyCard";
 
