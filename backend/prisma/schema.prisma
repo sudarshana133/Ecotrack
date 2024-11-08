@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId     Int      @id @default(autoincrement())
+  userName   String
+  oAuthToken String   @unique
+  devices    Device[]
+}
+
+model Device {
+  deviceId   Int    @id
+  userId     Int
+  deviceName String
+  power      Int[]  @default([])
+  energy     Int[]  @default([])
+  location   Int[]  @default([])
+  user       User   @relation(fields: [userId], references: [userId])
+}
+
+model Power {
+  dummyId Int   @id
+  north   Int[] @default([])
+  south   Int[] @default([])
+  east    Int[] @default([])
+  west    Int[] @default([])
+}

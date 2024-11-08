@@ -4,6 +4,7 @@ import { lazy } from "react";
 const Login = lazy(() => import("./pages/login/Login"));
 const Home = lazy(() => import("./pages/user/home/Home"));
 const Devices = lazy(() => import("./pages/user/devices/Devices"));
+const Dashboard = lazy(() => import("./pages/user/home/Dashboard"));
 
 const App: React.FC = () => (
   <Router>
@@ -12,6 +13,7 @@ const App: React.FC = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />}>
           <Route path="/devices" element={<Devices />} />
+          <Route path="/" element={<Dashboard />} />
         </Route>
       </Routes>
     </Suspense>
