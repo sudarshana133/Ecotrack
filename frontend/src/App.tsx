@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { lazy } from "react";
+const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
 const Login = lazy(() => import("./pages/login/Login"));
 const Home = lazy(() => import("./pages/user/home/Home"));
 const Devices = lazy(() => import("./pages/user/devices/Devices"));
@@ -12,8 +13,9 @@ const App: React.FC = () => (
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />}>
-          <Route path="/devices" element={<Devices />} />
           <Route path="/" element={<Dashboard />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </Suspense>
