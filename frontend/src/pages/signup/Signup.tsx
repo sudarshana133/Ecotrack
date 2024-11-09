@@ -9,16 +9,17 @@ const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
   const navigate = useNavigate();
-
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
+    const username = formData.get("username");
+    const password = formData.get("password");
     try {
-      await axios.post('/chatbot', {
-        username: formData.get("username"),
-        password: formData.get("password"),
+      await axios.post(`${BACKEND_URL}/`, {
+        username,
+        password
       });
       
       setIsModalOpen(true);
@@ -56,7 +57,7 @@ const Signup = () => {
               <Input placeholder="Enter your username" name="username" />
               <label>Password</label>
               <Input placeholder="Enter your password" name="password" />
-              <Button type="submit">Login</Button>
+              <Button type="submit">Signup</Button>
             </form>
           </div>
         </div>

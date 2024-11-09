@@ -1,7 +1,5 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-// Lazy-loaded components
 const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
 const Login = lazy(() => import("./pages/login/Login"));
 const UserHome = lazy(() => import("./pages/user/home/Home"));
