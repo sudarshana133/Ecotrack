@@ -1,18 +1,24 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { lazy } from "react";
+
+// Lazy-loaded components
 const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
 const Login = lazy(() => import("./pages/login/Login"));
 const UserHome = lazy(() => import("./pages/user/home/Home"));
 const Devices = lazy(() => import("./pages/user/devices/Devices"));
 const Dashboard = lazy(() => import("./pages/user/home/Dashboard"));
-const Home = lazy(()=>import("./pages/landing/Landing"));
+const Home = lazy(() => import("./pages/landing/Landing"));
+
 const App: React.FC = () => (
   <Router>
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/landing" element={<Home/>}/>
+        {/* Top-level route */}
+        <Route path="/landing" element={<Home />} />
         <Route path="/login" element={<Login />} />
+
+        {/* Nested routes for UserHome */}
         <Route path="/" element={<UserHome />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/devices" element={<Devices />} />
