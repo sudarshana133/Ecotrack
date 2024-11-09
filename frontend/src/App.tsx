@@ -21,8 +21,8 @@ const App: React.FC = () => (
           <Route index element={<Dashboard />} /> {/* Index route for / */}
           <Route path="devices" element={<Devices />} />
           <Route path="statistics" element={<Statistics />} />
-          <Route path="/landing" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="landing" element={<Home />} />
+          <Route path="login" element={<Login />} />
         </Route>
       </Routes>
     </Suspense>
