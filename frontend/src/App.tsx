@@ -1,6 +1,5 @@
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { lazy } from "react";
 
 // Lazy-loaded components
 const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
@@ -14,13 +13,10 @@ const App: React.FC = () => (
   <Router>
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {/* Top-level routes */}
-        <Route path="/" element={<Home />} index/>
+        <Route path="/" element={<Home />} index />
         <Route path="/login" element={<Login />} />
-
-        {/* UserHome and nested routes */}
         <Route path="/dashboard" element={<UserHome />}>
-          <Route element={<Dashboard />} /> {/* Index route for / */}
+          <Route index element={<Dashboard />} />
           <Route path="devices" element={<Devices />} />
           <Route path="statistics" element={<Statistics />} />
         </Route>
