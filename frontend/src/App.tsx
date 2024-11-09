@@ -14,15 +14,15 @@ const App: React.FC = () => (
   <Router>
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        {/* Top-level route */}
+        {/* Top-level routes */}
         <Route path="/landing" element={<Home />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Nested routes for UserHome */}
+        {/* UserHome and nested routes */}
         <Route path="/" element={<UserHome />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/devices" element={<Devices />} />
-          <Route path="/statistics" element={<Statistics />} />
+          <Route index element={<Dashboard />} /> {/* Index route for / */}
+          <Route path="devices" element={<Devices />} />
+          <Route path="statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </Suspense>
