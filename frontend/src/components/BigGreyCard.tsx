@@ -1,5 +1,3 @@
-import React from "react";
-
 type GreyCardProps = {
   heading: string;
   sidetext: string;

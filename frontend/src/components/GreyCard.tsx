@@ -1,4 +1,3 @@
-import React from "react";
 import { Activity } from "lucide-react"; // Import specific icon directly
 
 type GreyCardProps = {

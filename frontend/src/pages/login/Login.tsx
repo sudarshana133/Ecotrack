@@ -1,40 +1,22 @@
 import TokenModal from "@/components/TokenModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { apiClient } from '@/lib/api';
 
 const Login = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Initialize CSRF protection
-    const initializeCsrf = async () => {
-      try {
-        await fetch('http://139.84.158.140:8000/sanctum/csrf-cookie', {
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        });
-      } catch (error) {
-        console.error('Failed to fetch CSRF token:', error);
-      }
-    };
-
-    initializeCsrf();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     
     try {
-      await apiClient.post('/chatbot', {
+      await axios.post('/chatbot', {
         username: formData.get("username"),
         password: formData.get("password"),
       });
@@ -50,7 +32,7 @@ const Login = () => {
     // todo -> check for whether the token is valid or not
     console.log("Received token:", submittedToken);
     // todo -> navigate afterwards if the token is valid
-    localStorage.setItem("token",submittedToken);
+    localStorage.setItem("token",token);
     navigate("/");
   };
 
