@@ -11,11 +11,12 @@ model User {
   userId     Int      @id @default(autoincrement())
   userName   String
   oAuthToken String   @unique
+  password    String
   devices    Device[]
 }
 
 model Device {
-  deviceId   String    @id
+  deviceId   String @id
   userId     Int
   deviceName String
   power      Int[]  @default([])
