@@ -14,18 +14,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const express_1 = __importDefault(require("express"));
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const router = express_1.default.Router();
 // get devices
 router.post("/getDevices", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const token = req.headers.token;
-    const token = req.body.token;
-    console.log(token);
+    const token = req.headers.token;
+    const { username } = req.body;
     try {
         const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices`, {
             headers: {
-                Authorization: "Bearer " + token
+                Authorization: "Bearer " + token,
+            },
+        });
+        const items = devices.data.items;
+        const user = yield prisma.user.findFirst({
+            where: {
+                oAuthToken: token
             }
         });
+        if (!user) {
+            throw new Error("User not found");
+        }
+        yield Promise.all(items.map((item) => __awaiter(void 0, void 0, void 0, function* () {
+            yield prisma.device.upsert({
+                where: {
+                    deviceId: item.deviceId
+                },
+                update: {
+                    deviceName: item.label
+                },
+                create: {
+                    deviceId: item.deviceId,
+                    deviceName: item.label,
+                    userId: user.userId
+                }
+            });
+        })));
         res.status(200).json(devices.data.items);
     }
     catch (error) {
@@ -33,21 +58,46 @@ router.post("/getDevices", (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 }));
 router.post("/getEnergy", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const token = req.headers.token;
+    const token = req.headers.token;
     const deviceId = req.body.deviceId;
-    const token = req.body.token;
+    const userId = req.body.userId;
+    const deviceName = req.body.deviceName;
     console.log(deviceId);
     try {
         const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`, {
             headers: {
-                Authorization: "Bearer " + token
+                Authorization: "Bearer " + token,
+            },
+        });
+        const energy = devices.data.components.main.powerConsumptionReport.powerConsumption
+            .value.deltaEnergy;
+        const device = yield prisma.device.findFirst({
+            where: {
+                deviceId: deviceId
             }
         });
-        res.status(200).json(devices.data);
+        const updatedPowerArray = (device === null || device === void 0 ? void 0 : device.power) ? [...device.power, energy] : [energy];
+        const response = yield prisma.device.upsert({
+            where: {
+                deviceId: deviceId
+            },
+            update: {
+                energy: updatedPowerArray
+            },
+            create: {
+                deviceId: deviceId,
+                energy: [energy],
+                deviceName,
+                userId
+            }
+        });
+        res
+            .status(200)
+            .json(response);
     }
     catch (error) {
         res.status(500).json(error.message);
     }
 }));
 exports.default = router;
-//https://api.smartthings.com/v1/devices/{deviceId}/status  
+//https://api.smartthings.com/v1/devices/{deviceId}/status

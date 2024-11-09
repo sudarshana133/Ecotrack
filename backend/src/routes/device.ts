@@ -1,16 +1,16 @@
 import axios from "axios";
 import express, { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
+import { DeviceFromAPI } from "../types/Device";
 
 const prisma = new PrismaClient();
 
 const router = express.Router();
 
 // get devices
-router.get("/getDevices", async (req: Request, res: Response) => {
-  // const token = req.headers.token;
-  const token = req.body.token;
-  console.log(token);
+router.post("/getDevices", async (req: Request, res: Response) => {
+  const token = req.headers.token;
+  const { username } = req.body;
   try {
     const devices = await axios.get(
       `${process.env.SMARTTHINGS_BASE_URL}/devices`,
@@ -20,6 +20,32 @@ router.get("/getDevices", async (req: Request, res: Response) => {
         },
       }
     );
+    const items: DeviceFromAPI[] = devices.data.items;
+    const user = await prisma.user.findFirst({
+      where: {
+        oAuthToken: token as string
+      }
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await Promise.all(items.map(async (item: DeviceFromAPI) => {
+      await prisma.device.upsert({
+        where: {
+          deviceId: item.deviceId
+        },
+        update: {
+          deviceName: item.label
+        },
+        create: {
+          deviceId: item.deviceId,
+          deviceName: item.label,
+          userId: user.userId
+        }
+      });
+    }));
     res.status(200).json(devices.data.items);
   } catch (error: any) {
     res.status(500).json(error.message);
@@ -41,17 +67,14 @@ router.post("/getEnergy", async (req: Request, res: Response) => {
         },
       }
     );
-    const energy =
-      devices.data.components.main.powerConsumptionReport.powerConsumption.value
-        .deltaEnergy;
+    const energy = devices.data.components.main.powerConsumptionReport.powerConsumption
+    .value.deltaEnergy;
     const device = await prisma.device.findFirst({
-      where: {
-        deviceId: deviceId,
-      },
-    });
-    const updatedPowerArray = device?.power
-      ? [...device.power, energy]
-      : [energy];
+        where:{
+            deviceId:deviceId
+        }
+    })
+    const updatedPowerArray = device?.power ? [...device.power, energy] : [energy];
     const response = await prisma.device.upsert({
       where: {
         deviceId: deviceId,

@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/routes/device.ts","./src/types/status.ts"],"version":"5.6.3"}
+{"root":["./src/index.ts","./src/routes/device.ts","./src/types/device.ts","./src/types/status.ts"],"version":"5.6.3"}

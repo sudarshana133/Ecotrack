@@ -37,7 +37,7 @@ interface OcfInfo {
     additionalAuthCodeRequired: boolean;
 }
 
-export interface Device {
+export interface DeviceFromAPI {
     deviceId: string;
     name: string;
     label: string;
