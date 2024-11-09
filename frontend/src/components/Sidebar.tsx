@@ -9,11 +9,12 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const menuItems = [
-    { icon: Home, text: "Overview", path: "/" },
-    { icon: BarChart2, text: "Statistics", path: "/statistics" },
-    { icon: BarChart2, text: "Devices", path: "/devices" },
-    { icon: Bell, text: "Notifications", path: "/notifications" },
-  ];
+    { icon: Home, text: "Overview", path: "/dashboard" },
+    { icon: BarChart2, text: "Statistics", path: "/dashboard/statistics" },
+    { icon: BarChart2, text: "Devices", path: "/dashboard/devices" },
+    { icon: Bell, text: "Notifications", path: "/dashboard/notifications" },
+];
+
 
   const bottomMenuItems = [
     { icon: Settings, text: "Settings", path: "/settings" },
