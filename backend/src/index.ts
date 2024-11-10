@@ -2,22 +2,28 @@ import express, { Request, Response, Router } from "express";
 import dotenv from "dotenv";
 import axios from "axios";
 import { DeviceStatusResponse } from "./types/status";
+import indexRouter from "./routes/index";
+import cors from "cors";
+
+const SMARTTHINGS_API_URL = "https://api.smartthings.com/v1";
+
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
 app.use(express.json());
-import DeviceRoute from "./routes/device";
-import cors from "cors";
-const SMARTTHINGS_API_URL = 'https://api.smartthings.com/v1';
-app.use(cors({
+
+app.use(
+  cors({
     origin: "*",
-    credentials: true
-}))
-app.use("/devices", DeviceRoute);
+    credentials: true,
+  })
+);
+app.use("/", indexRouter);
+
 // app.get("/devices", async (req: Request, res: Response) => {
 //     try {
 //         const response = await axios.get(
-//             `${SMARTTHINGS_API_URL}/devices`, 
+//             `${SMARTTHINGS_API_URL}/devices`,
 //             {
 //                 headers: {
 //                     Authorization: `Bearer ${process.env.SMARTTHINGS_API_TOKEN}`
@@ -62,7 +68,7 @@ app.use("/devices", DeviceRoute);
 //         });
 //         res.status(200).json(capabilities.data);
 //     } catch (error:any) {
-//         res.status(500).json(error.message)   
+//         res.status(500).json(error.message)
 //     }
 // });
 
@@ -70,7 +76,7 @@ app.use("/devices", DeviceRoute);
 //     try {
 //         const { deviceId } = req.params;
 //         const response = await axios.get(
-//             `${SMARTTHINGS_API_URL}/devices/${deviceId}/status`, 
+//             `${SMARTTHINGS_API_URL}/devices/${deviceId}/status`,
 //             {
 //                 headers: {
 //                     Authorization: `Bearer ${process.env.SMARTTHINGS_API_TOKEN}`
@@ -124,5 +130,5 @@ app.use("/devices", DeviceRoute);
 //     }
 // });
 app.listen(8000, () => {
-    console.log(`App listening on http://localhost:${port}`);
-})
+  console.log(`App listening on http://localhost:${port}`);
+});
