@@ -64,3 +64,55 @@
     @apply bg-background text-foreground;
   }
 }
+#wifi-loader {
+  --background: #a3e635; /* Light green */
+  --front-color: #22c55e; /* Green */
+  --back-color: #38bdf8; /* Sky blue */
+}
+
+#wifi-loader svg circle {
+  fill: none;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transform: rotate(-100deg);
+  transform-origin: center;
+}
+
+#wifi-loader svg circle.back {
+  stroke: var(--back-color);
+}
+
+#wifi-loader svg circle.front {
+  stroke: var(--front-color);
+}
+
+#wifi-loader svg.circle-outer circle {
+  stroke-dasharray: 62.75 188.25;
+  animation: circle-outer-animation 1.8s ease infinite;
+}
+
+#wifi-loader svg.circle-middle circle {
+  stroke-dasharray: 42.5 127.5;
+  animation: circle-middle-animation 1.8s ease infinite;
+}
+
+#wifi-loader svg.circle-inner circle {
+  stroke-dasharray: 22 66;
+  animation: circle-inner-animation 1.8s ease infinite;
+}
+
+@keyframes circle-outer-animation {
+  0%, 100% { stroke-dashoffset: 25; }
+  65% { stroke-dashoffset: 301; }
+}
+
+@keyframes circle-middle-animation {
+  0%, 100% { stroke-dashoffset: 17; }
+  65% { stroke-dashoffset: 204; }
+}
+
+@keyframes circle-inner-animation {
+  0%, 100% { stroke-dashoffset: 9; }
+  65% { stroke-dashoffset: 106; }
+}
