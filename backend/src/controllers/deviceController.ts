@@ -52,11 +52,12 @@ const getDevices = async (req: Request, res: Response) => {
 };
 
 const getEnergy = async (req: Request, res: Response) => {
-  const token = req.headers.token;
+  const token = req.body.token;
   const deviceId = req.body.deviceId;
   const userId = req.body.userId;
   const deviceName = req.body.deviceName;
   console.log(deviceId);
+  console.log(token);
   try {
     const devices = await axios.get(
       `${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`,
@@ -66,17 +67,23 @@ const getEnergy = async (req: Request, res: Response) => {
         },
       }
     );
+    console.log("1");
     const energy =
       devices.data.components.main.powerConsumptionReport.powerConsumption.value
         .deltaEnergy;
+        console.log(devices.data.components.main.powerConsumptionReport);
+        console.log(energy);
     const device = await prisma.device.findFirst({
       where: {
         deviceId: deviceId,
       },
     });
+    console.log("2");
+    console.log(device);
     const updatedPowerArray = device?.power
       ? [...device.power, energy]
       : [energy];
+      console.log(updatedPowerArray);
     const response = await prisma.device.upsert({
       where: {
         deviceId: deviceId,
@@ -88,9 +95,10 @@ const getEnergy = async (req: Request, res: Response) => {
         deviceId: deviceId,
         energy: [energy],
         deviceName,
-        userId,
+        userId:Number(userId),
       },
     });
+    console.log("3");
     res.status(200).json(response);
   } catch (error: any) {
     res.status(500).json(error.message);

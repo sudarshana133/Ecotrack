@@ -57,27 +57,34 @@ const getDevices = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.getDevices = getDevices;
 const getEnergy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.token;
+    const token = req.body.token;
     const deviceId = req.body.deviceId;
     const userId = req.body.userId;
     const deviceName = req.body.deviceName;
     console.log(deviceId);
+    console.log(token);
     try {
         const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`, {
             headers: {
                 Authorization: "Bearer " + token,
             },
         });
+        console.log("1");
         const energy = devices.data.components.main.powerConsumptionReport.powerConsumption.value
             .deltaEnergy;
+        console.log(devices.data.components.main.powerConsumptionReport);
+        console.log(energy);
         const device = yield prisma.device.findFirst({
             where: {
                 deviceId: deviceId,
             },
         });
+        console.log("2");
+        console.log(device);
         const updatedPowerArray = (device === null || device === void 0 ? void 0 : device.power)
             ? [...device.power, energy]
             : [energy];
+        console.log(updatedPowerArray);
         const response = yield prisma.device.upsert({
             where: {
                 deviceId: deviceId,
@@ -89,9 +96,10 @@ const getEnergy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 deviceId: deviceId,
                 energy: [energy],
                 deviceName,
-                userId,
+                userId: Number(userId),
             },
         });
+        console.log("3");
         res.status(200).json(response);
     }
     catch (error) {

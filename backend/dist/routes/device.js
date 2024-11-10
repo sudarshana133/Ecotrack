@@ -6,5 +6,5 @@ const deviceController_1 = require("../controllers/deviceController");
 const deviceRouter = (0, express_1.Router)();
 exports.deviceRouter = deviceRouter;
 deviceRouter.get("/getDevices", deviceController_1.getDevices);
-deviceRouter.get("/getEnergy", deviceController_1.getEnergy);
-deviceRouter.get("/getLeaders", deviceController_1.getLeaders);
+deviceRouter.post("/getEnergy", deviceController_1.getEnergy);
+deviceRouter.post("/getLeaders", deviceController_1.getLeaders);

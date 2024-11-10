@@ -8,7 +8,7 @@ import {
 
 const deviceRouter = Router();
 deviceRouter.get("/getDevices", getDevices);
-deviceRouter.get("/getEnergy", getEnergy);
-deviceRouter.get("/getLeaders", getLeaders);
+deviceRouter.post("/getEnergy", getEnergy);
+deviceRouter.post("/getLeaders", getLeaders);
 
 export { deviceRouter };
