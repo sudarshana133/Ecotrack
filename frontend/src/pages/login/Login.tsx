@@ -3,14 +3,25 @@ import { Button } from "../../components/ui/button";
 import { Card, CardHeader, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const navigate = useNavigate();
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Username:", username, "Password:", password);
+    try {
+      await axios.post(`${BACKEND_URL}/auth/signin`,{
+        username,
+        password
+      });
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
@@ -60,7 +71,7 @@ const Login: React.FC = () => {
             </div>
             <Button
               type="submit"
-              className="w-full bg-green-500 text-white hover:bg-blue-600"
+              className="w-full bg-green-500 text-white hover:bg-green-600"
             >
               Login
             </Button>

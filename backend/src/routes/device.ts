@@ -4,11 +4,14 @@ import {
   getEnergy,
   getDevices,
   getLeaders,
+  PowerOnAndOff,
+  getDevice
 } from "../controllers/deviceController";
 
 const deviceRouter = Router();
-deviceRouter.get("/getDevices", getDevices);
+deviceRouter.post("/getDevices", getDevices);
 deviceRouter.post("/getEnergy", getEnergy);
 deviceRouter.post("/getLeaders", getLeaders);
-
+deviceRouter.post("/power", PowerOnAndOff);
+deviceRouter.get("/:deviceId",getDevice);
 export { deviceRouter };

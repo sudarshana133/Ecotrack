@@ -17,7 +17,7 @@ const Sidebar = () => {
 
 
   const bottomMenuItems = [
-    { icon: Settings, text: "Settings", path: "/settings" },
+    { icon: Settings, text: "Settings", path: "/dashboard/settings" },
     { icon: LogOut, text: "Logout", path: "/logout" },
   ];
 

@@ -9,7 +9,7 @@ const Devices = () => {
   const getDevices = async()=>{
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/devices/getDevices",{
+      const res = await axios.post("http://localhost:8000/device/getDevices",{
         username:"svsdev"
       },{
         headers:{

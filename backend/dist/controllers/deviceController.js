@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLeaders = exports.getEnergy = exports.getDevices = void 0;
+exports.getDevice = exports.PowerOnAndOff = exports.getLeaders = exports.getEnergy = exports.getDevices = void 0;
 const axios_1 = __importDefault(require("axios"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
@@ -26,11 +26,13 @@ const getDevices = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             },
         });
         const items = devices.data.items;
+        // console.log(items)
         const user = yield prisma.user.findFirst({
             where: {
-                oAuthToken: token,
+                userName: username
             },
         });
+        console.log(user);
         if (!user) {
             throw new Error("User not found");
         }
@@ -133,3 +135,44 @@ const getLeaders = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     res.json(result);
 });
 exports.getLeaders = getLeaders;
+const PowerOnAndOff = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.token;
+    const { deviceId, power } = req.body;
+    try {
+        const response = yield axios_1.default.post(`${process.env.SMARTTHINGS_BASE_URL}/${deviceId}/commands`, {
+            commands: [
+                {
+                    component: "main",
+                    capability: "switch",
+                    command: power ? "on" : "off",
+                },
+            ],
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        res.status(200).json({ msg: "Success" });
+    }
+    catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+});
+exports.PowerOnAndOff = PowerOnAndOff;
+const getDevice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const token = req.headers.token;
+    const { deviceId } = req.params;
+    try {
+        const response = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        res.status(200).json(response.data);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: error.message });
+    }
+});
+exports.getDevice = getDevice;

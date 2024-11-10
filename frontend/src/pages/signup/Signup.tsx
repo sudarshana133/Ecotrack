@@ -1,41 +1,42 @@
 import TokenModal from "@/components/TokenModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-// import axios from "axios";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const username = formData.get("username");
-    const password = formData.get("password");
-    if (!username || !password) return;
-    console.log(username, password);
-    try {
-      // await axios.post(`${BACKEND_URL}/`, {
-      //   username,
-      //   password
-      // });
+    const usernameValue = formData.get("username") as string;
+    const passwordValue = formData.get("password") as string;
 
-      setIsModalOpen(true);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
+    if (!usernameValue || !passwordValue) return;
+
+    setUsername(usernameValue);
+    setPassword(passwordValue);
+    console.log(usernameValue, passwordValue);
+    setIsModalOpen(true);
   };
 
-  const handleTokenSubmit = (submittedToken: string) => {
-    setToken(submittedToken);
-    // todo -> check for whether the token is valid or not
-    console.log("Received token:", submittedToken);
-    // todo -> navigate afterwards if the token is valid
-    console.log(token);
+  const handleTokenSubmit = async (submittedToken: string) => {
+    try {
+      const res = await axios.post(`${BACKEND_URL}/auth/signup`, {
+        username,
+        password,
+        token: submittedToken,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
     localStorage.setItem("token", submittedToken);
     navigate("/dashboard");
   };

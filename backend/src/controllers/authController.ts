@@ -89,5 +89,28 @@ const signup: any = async (req: Request, res: Response) => {
     msg: "user added",
   });
 };
+const deleteUser:any = async (req: Request, res: Response) => {
+  const { username } = req.body;
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        userName: username,
+      },
+    });
 
-export { signup, signin };
+    if (!user) return res.status(404).json({ msg: "User not found" });
+
+    // Use userId for deletion since it's unique
+    await prisma.user.delete({
+      where: {
+        userId: user.userId,
+      },
+    });
+
+    res.status(200).json("User deleted");
+  } catch (error: any) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+export { signup, signin,deleteUser };

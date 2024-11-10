@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signin = exports.signup = void 0;
+exports.deleteUser = exports.signin = exports.signup = void 0;
 const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -99,3 +99,26 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.signup = signup;
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username } = req.body;
+    try {
+        const user = yield prisma.user.findFirst({
+            where: {
+                userName: username,
+            },
+        });
+        if (!user)
+            return res.status(404).json({ msg: "User not found" });
+        // Use userId for deletion since it's unique
+        yield prisma.user.delete({
+            where: {
+                userId: user.userId,
+            },
+        });
+        res.status(200).json("User deleted");
+    }
+    catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+});
+exports.deleteUser = deleteUser;

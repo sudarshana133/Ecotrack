@@ -1,5 +1,5 @@
 import axios from "axios";
-import{ Request, Response } from "express";
+import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { DeviceFromAPI } from "../types/Device";
 
@@ -18,12 +18,13 @@ const getDevices = async (req: Request, res: Response) => {
       }
     );
     const items: DeviceFromAPI[] = devices.data.items;
+    // console.log(items)
     const user = await prisma.user.findFirst({
       where: {
-        oAuthToken: token as string,
+        userName: username
       },
     });
-
+    console.log(user)
     if (!user) {
       throw new Error("User not found");
     }
@@ -71,8 +72,8 @@ const getEnergy = async (req: Request, res: Response) => {
     const energy =
       devices.data.components.main.powerConsumptionReport.powerConsumption.value
         .deltaEnergy;
-        console.log(devices.data.components.main.powerConsumptionReport);
-        console.log(energy);
+    console.log(devices.data.components.main.powerConsumptionReport);
+    console.log(energy);
     const device = await prisma.device.findFirst({
       where: {
         deviceId: deviceId,
@@ -83,7 +84,7 @@ const getEnergy = async (req: Request, res: Response) => {
     const updatedPowerArray = device?.power
       ? [...device.power, energy]
       : [energy];
-      console.log(updatedPowerArray);
+    console.log(updatedPowerArray);
     const response = await prisma.device.upsert({
       where: {
         deviceId: deviceId,
@@ -95,7 +96,7 @@ const getEnergy = async (req: Request, res: Response) => {
         deviceId: deviceId,
         energy: [energy],
         deviceName,
-        userId:Number(userId),
+        userId: Number(userId),
       },
     });
     console.log("3");
@@ -137,4 +138,50 @@ const getLeaders = async (req: Request, res: Response) => {
   res.json(result);
 };
 
-export { getDevices, getEnergy, getLeaders };
+const PowerOnAndOff: any = async (req: Request, res: Response) => {
+  const token = req.headers.token;
+  const { deviceId, power } = req.body;
+  try {
+    const response = await axios.post(
+      `${process.env.SMARTTHINGS_BASE_URL}/${deviceId}/commands`,
+      {
+        commands: [
+          {
+            component: "main",
+            capability: "switch",
+            command: power ? "on" : "off",
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    res.status(200).json({ msg: "Success" });
+  } catch (error: any) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+const getDevice: any = async (req: Request, res: Response) => {
+  const token = req.headers.token;
+  const { deviceId } = req.params;
+  try {
+    const response = await axios.get(
+      `${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    console.log(error)
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+export { getDevices, getEnergy, getLeaders, PowerOnAndOff,getDevice };

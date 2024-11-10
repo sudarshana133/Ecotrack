@@ -7,3 +7,4 @@ const authRouter = (0, express_1.Router)();
 exports.authRouter = authRouter;
 authRouter.post("/signup", authController_1.signup);
 authRouter.post("/signin", authController_1.signin);
+authRouter.delete("/delete", authController_1.deleteUser);
