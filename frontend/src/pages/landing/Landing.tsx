@@ -103,8 +103,8 @@ const Landing = () => {
               Join our community and experience the benefits of sustainable
               technology today!
             </p>
-            <Button className="bg-[#34f853] text-black hover:bg-[#2ce048] transition-colors">
-              Join Now
+            <Button className="bg-[#34f853] text-black hover:bg-[#2ce048] transition-colors" asChild>
+              <a href="/signup">Join Now</a>
             </Button>
           </div>
           <div className="flex justify-center lg:justify-end">

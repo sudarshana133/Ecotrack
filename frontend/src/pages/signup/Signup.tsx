@@ -1,7 +1,7 @@
 import TokenModal from "@/components/TokenModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import axios from "axios";
+// import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,19 +9,21 @@ const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [token, setToken] = useState<string>("");
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
+    if (!username || !password) return;
+    console.log(username, password);
     try {
-      await axios.post(`${BACKEND_URL}/`, {
-        username,
-        password
-      });
-      
+      // await axios.post(`${BACKEND_URL}/`, {
+      //   username,
+      //   password
+      // });
+
       setIsModalOpen(true);
     } catch (error) {
       console.error("Login failed:", error);
@@ -33,8 +35,9 @@ const Signup = () => {
     // todo -> check for whether the token is valid or not
     console.log("Received token:", submittedToken);
     // todo -> navigate afterwards if the token is valid
-    localStorage.setItem("token",token);
-    navigate("/");
+    console.log(token);
+    localStorage.setItem("token", submittedToken);
+    navigate("/dashboard");
   };
 
   return (
@@ -57,7 +60,9 @@ const Signup = () => {
               <Input placeholder="Enter your username" name="username" />
               <label>Password</label>
               <Input placeholder="Enter your password" name="password" />
-              <Button type="submit">Signup</Button>
+              <Button type="submit" className="bg-green-500 hover:bg-green-600">
+                Submit
+              </Button>
             </form>
           </div>
         </div>

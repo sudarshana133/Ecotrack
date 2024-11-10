@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Loader from "./components/Loader";
 const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
 const Login = lazy(() => import("./pages/login/Login"));
 const UserHome = lazy(() => import("./pages/user/home/Home"));
@@ -9,7 +10,13 @@ const Home = lazy(() => import("./pages/landing/Landing"));
 const Signup = lazy(() => import("./pages/signup/Signup"));
 const App: React.FC = () => (
   <Router>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="h-screen w-full flex items-center justify-center">
+          <Loader />
+        </div>
+      }
+    >
       <Routes>
         <Route path="/" element={<Home />} index />
         <Route path="/login" element={<Login />} />

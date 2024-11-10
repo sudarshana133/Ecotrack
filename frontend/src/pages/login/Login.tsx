@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-6">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 px-4 py-6">
       <img src="/logo.png" alt="Logo" className="w-32 mb-6" />
       <Card className="w-full max-w-md bg-white shadow-lg rounded-lg">
         <CardHeader>

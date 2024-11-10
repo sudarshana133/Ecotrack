@@ -1,4 +1,4 @@
-import { Button } from './ui/button'
+import { Button } from "./ui/button";
 
 function Navbar() {
   return (
@@ -8,19 +8,6 @@ function Navbar() {
           <div className="flex items-center">
             <img src="/logo.png" alt="Logo" className="h-8 w-auto" />
           </div>
-          
-          <div className="hidden md:flex md:items-center md:space-x-8">
-            <a href="/" className="text-gray-700 hover:text-gray-900">
-              Home
-            </a>
-            <a href="/about" className="text-gray-700 hover:text-gray-900">
-              About Us
-            </a>
-            <a href="/contact" className="text-gray-700 hover:text-gray-900">
-              Contact
-            </a>
-          </div>
-
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>
               <a href="/login">Login</a>
@@ -32,7 +19,7 @@ function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
