@@ -5,22 +5,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const index_1 = __importDefault(require("./routes/index"));
+const cors_1 = __importDefault(require("cors"));
+const SMARTTHINGS_API_URL = "https://api.smartthings.com/v1";
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8000;
 app.use(express_1.default.json());
-const device_1 = __importDefault(require("./routes/device"));
-const cors_1 = __importDefault(require("cors"));
-const SMARTTHINGS_API_URL = 'https://api.smartthings.com/v1';
 app.use((0, cors_1.default)({
     origin: "*",
-    credentials: true
+    credentials: true,
 }));
-app.use("/devices", device_1.default);
+app.use("/", index_1.default);
 // app.get("/devices", async (req: Request, res: Response) => {
 //     try {
 //         const response = await axios.get(
-//             `${SMARTTHINGS_API_URL}/devices`, 
+//             `${SMARTTHINGS_API_URL}/devices`,
 //             {
 //                 headers: {
 //                     Authorization: `Bearer ${process.env.SMARTTHINGS_API_TOKEN}`
@@ -65,14 +65,14 @@ app.use("/devices", device_1.default);
 //         });
 //         res.status(200).json(capabilities.data);
 //     } catch (error:any) {
-//         res.status(500).json(error.message)   
+//         res.status(500).json(error.message)
 //     }
 // });
 // app.get("/devices/:deviceId/power", async (req: Request, res: Response) => {
 //     try {
 //         const { deviceId } = req.params;
 //         const response = await axios.get(
-//             `${SMARTTHINGS_API_URL}/devices/${deviceId}/status`, 
+//             `${SMARTTHINGS_API_URL}/devices/${deviceId}/status`,
 //             {
 //                 headers: {
 //                     Authorization: `Bearer ${process.env.SMARTTHINGS_API_TOKEN}`
