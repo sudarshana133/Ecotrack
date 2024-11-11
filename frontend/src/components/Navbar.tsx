@@ -1,7 +1,7 @@
 import { Button } from "./ui/button";
 
 function Navbar() {
-  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
+  // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   return (
     <nav className="w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg fixed top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 
 const Landing = () => {
-  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
+  // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const testimonials = [
     {
       name: "Aarav",

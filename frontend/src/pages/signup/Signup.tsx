@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
+  // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();

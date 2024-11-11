@@ -8,7 +8,7 @@ import {
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
+  // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const menuItems = [
     { icon: Home, text: "Overview", path: "/dashboard" },
     { icon: BarChart2, text: "Statistics", path: "/dashboard/statistics" },

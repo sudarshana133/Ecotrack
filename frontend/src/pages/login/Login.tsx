@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
+  // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const handleSubmit = async(e: React.FormEvent) => {
