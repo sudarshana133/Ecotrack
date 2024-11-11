@@ -135,7 +135,7 @@ const PowerOnAndOff = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const token = req.headers.token;
     const { deviceId, power } = req.body;
     try {
-        const response = yield axios_1.default.post(`${process.env.SMARTTHINGS_BASE_URL}/${deviceId}/commands`, {
+        const response = yield axios_1.default.post(`https://api.smartthings.com/v1/devices/${deviceId}/commands`, {
             commands: [
                 {
                     component: "main",
@@ -151,6 +151,7 @@ const PowerOnAndOff = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(200).json({ msg: "Success" });
     }
     catch (error) {
+        console.log(error);
         res.status(500).json({ msg: error.message });
     }
 });

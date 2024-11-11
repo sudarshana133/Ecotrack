@@ -32,7 +32,7 @@ const Landing = () => {
         {/* Hero Section */}
         <div className="absolute inset-0">
           <img
-            src={`https://cdn-85t93yhaveqs.vultrcdn.com/hero.png`}
+            src={`https://cdn-85t93yhaveqs.vultrcdn.com/hero.jpg`}
             alt="Hero"
             className="h-full w-full object-cover brightness-[0.7]"
           />
@@ -50,6 +50,15 @@ const Landing = () => {
               <a href="/signup">Get Started</a>
             </Button>
           </div>
+        </div>
+        <div className="fixed bottom-4 right-4">
+          <a href="http://139.84.158.140:8000/chat" target="_blank">
+            <img
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/chatbot.png`}
+              alt="Chatbot"
+              className="w-24 h-24 cursor-pointer"
+            />
+          </a>
         </div>
       </section>
 
@@ -104,7 +113,10 @@ const Landing = () => {
               Join our community and experience the benefits of sustainable
               technology today!
             </p>
-            <Button className="bg-[#34f853] text-black hover:bg-[#2ce048] transition-colors" asChild>
+            <Button
+              className="bg-[#34f853] text-black hover:bg-[#2ce048] transition-colors"
+              asChild
+            >
               <a href="/signup">Join Now</a>
             </Button>
           </div>
@@ -120,7 +132,7 @@ const Landing = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
           <div className="flex justify-center lg:justify-start order-2 lg:order-1">
             <img
-              src={`https://cdn-85t93yhaveqs.vultrcdn.com/landingimg2.svg`}
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/landingimg2.jpg`}
               alt="Data Security"
               className="w-full max-w-[400px] h-auto"
             />
@@ -186,7 +198,7 @@ const Landing = () => {
           ))}
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
