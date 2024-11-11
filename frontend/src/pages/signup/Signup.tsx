@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -46,14 +47,14 @@ const Signup = () => {
       <div className="flex min-h-screen flex-col lg:flex-row">
         <div className="hidden lg:flex lg:w-1/2 bg-[#e9ebef] items-center justify-center">
           <img
-            src="/login.png"
+            src={`${IMAGE_URL}/login.png`}
             alt="login-image"
             className="max-w-full h-auto"
           />
         </div>
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center gap-8 p-4">
           <div>
-            <img src="/logo.png" alt="logo" className="max-w-[200px]" />
+            <img src={`${IMAGE_URL}/logo.png`} alt="logo" className="max-w-[200px]" />
           </div>
           <div className="w-full max-w-[400px]">
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

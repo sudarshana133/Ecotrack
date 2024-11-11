@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
+  const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const menuItems = [
     { icon: Home, text: "Overview", path: "/dashboard" },
     { icon: BarChart2, text: "Statistics", path: "/dashboard/statistics" },
@@ -24,7 +25,7 @@ const Sidebar = () => {
   return (
     <div className="fixed h-screen w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6">
-        <img src="/logo.png" alt="logo" className="h-8" />
+        <img src={`${IMAGE_URL}/logo.png`} alt="logo" className="h-8" />
       </div>
 
       <nav className="flex-1 px-4 flex flex-col justify-between">
