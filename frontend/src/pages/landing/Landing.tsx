@@ -32,7 +32,7 @@ const Landing = () => {
         {/* Hero Section */}
         <div className="absolute inset-0">
           <img
-            src={`${IMAGE_URL}/hero.png`}
+            src={`https://cdn-85t93yhaveqs.vultrcdn.com/hero.png`}
             alt="Hero"
             className="h-full w-full object-cover brightness-[0.7]"
           />
@@ -63,7 +63,7 @@ const Landing = () => {
             {/* Feature cards */}
             <div className="flex flex-col items-center p-4 transition-transform hover:scale-105">
               <img
-                src={`${IMAGE_URL}/landing-page-img-1.svg`}
+                src={`https://cdn-85t93yhaveqs.vultrcdn.com/landing-page-img-1.svg`}
                 alt="Track Energy"
                 className="w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mb-4"
               />
@@ -73,7 +73,7 @@ const Landing = () => {
             </div>
             <div className="flex flex-col items-center p-4 transition-transform hover:scale-105">
               <img
-                src={`${IMAGE_URL}/landing-page-img-2.svg`}
+                src={`https://cdn-85t93yhaveqs.vultrcdn.com/landing-page-img-2.svg`}
                 alt="Monitor Devices"
                 className="w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mb-4"
               />
@@ -83,7 +83,7 @@ const Landing = () => {
             </div>
             <div className="flex flex-col items-center p-4 transition-transform hover:scale-105">
               <img
-                src={`${IMAGE_URL}/landing-page-img-3.svg`}
+                src={`https://cdn-85t93yhaveqs.vultrcdn.com/landing-page-img-3.svg`}
                 alt="Optimize and Save"
                 className="w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 mb-4"
               />
@@ -110,7 +110,7 @@ const Landing = () => {
           </div>
           <div className="flex justify-center lg:justify-end">
             <img
-              src={`${IMAGE_URL}/landingimg1.svg`}
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/landingimg1.svg`}
               alt="EcoTrack Features"
               className="w-full max-w-[400px] h-auto"
             />
@@ -120,7 +120,7 @@ const Landing = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-16">
           <div className="flex justify-center lg:justify-start order-2 lg:order-1">
             <img
-              src={`${IMAGE_URL}/landingimg2.svg`}
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/landingimg2.svg`}
               alt="Data Security"
               className="w-full max-w-[400px] h-auto"
             />
@@ -151,7 +151,7 @@ const Landing = () => {
           </div>
           <div className="flex justify-center lg:justify-end">
             <img
-              src={`${IMAGE_URL}/landingimg3.svg`}
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/landingimg3.svg`}
               alt="Carbon Footprint"
               className="w-full max-w-[400px] h-auto"
             />

@@ -7,7 +7,7 @@ function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <img src={`${IMAGE_URL}/logo.png`} alt="Logo" className="h-8 w-auto" />
+            <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="Logo" className="h-8 w-auto" />
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="ghost" asChild>

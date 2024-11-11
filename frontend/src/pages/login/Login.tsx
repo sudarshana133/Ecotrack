@@ -27,7 +27,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 px-4 py-6">
-      <img src={`${IMAGE_URL}/logo.png`} alt="Logo" className="w-32 mb-6" />
+      <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="Logo" className="w-32 mb-6" />
       <Card className="w-full max-w-md bg-white shadow-lg rounded-lg">
         <CardHeader>
           <h2 className="text-center text-2xl font-semibold text-gray-700">

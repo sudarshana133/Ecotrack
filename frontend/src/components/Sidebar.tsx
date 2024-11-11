@@ -25,7 +25,7 @@ const Sidebar = () => {
   return (
     <div className="fixed h-screen w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6">
-        <img src={`${IMAGE_URL}/logo.png`} alt="logo" className="h-8" />
+        <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="logo" className="h-8" />
       </div>
 
       <nav className="flex-1 px-4 flex flex-col justify-between">
