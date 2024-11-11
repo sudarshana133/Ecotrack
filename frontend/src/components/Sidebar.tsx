@@ -1,10 +1,4 @@
-import {
-  Home,
-  BarChart2,
-  Bell,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { Home, BarChart2, Bell, Settings, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -14,18 +8,21 @@ const Sidebar = () => {
     { icon: BarChart2, text: "Statistics", path: "/dashboard/statistics" },
     { icon: BarChart2, text: "Devices", path: "/dashboard/devices" },
     { icon: Bell, text: "Notifications", path: "/dashboard/notifications" },
-];
-
+  ];
 
   const bottomMenuItems = [
     { icon: Settings, text: "Settings", path: "/dashboard/settings" },
-    { icon: LogOut, text: "Logout", path: "/logout" },
+    { icon: LogOut, text: "Logout", path: "/" },
   ];
 
   return (
     <div className="fixed h-screen w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6">
-        <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="logo" className="h-8" />
+        <img
+          src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`}
+          alt="logo"
+          className="h-8"
+        />
       </div>
 
       <nav className="flex-1 px-4 flex flex-col justify-between">
@@ -48,6 +45,13 @@ const Sidebar = () => {
             <li key={item.path}>
               <Link
                 to={item.path}
+                onClick={() => {
+                  if (item.text === "Logout") {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("username");
+                    window.location.reload();
+                  }
+                }}
                 className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               >
                 <item.icon size={20} />
@@ -58,7 +62,7 @@ const Sidebar = () => {
         </ul>
       </nav>
     </div>
-  )
+  );
 };
 
 export default Sidebar;

@@ -10,7 +10,7 @@ interface TokenModalProps {
 
 const TokenModal = ({ isOpen, onClose, onSubmit }: TokenModalProps) => {
   const [tokenInput, setTokenInput] = useState("");
-
+  
   if (!isOpen) return null;
 
   return (

@@ -1,5 +1,10 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Loader from "./components/Loader";
 const Statistics = lazy(() => import("./pages/user/statistics/statistics"));
 const Login = lazy(() => import("./pages/login/Login"));
@@ -21,9 +26,36 @@ const App: React.FC = () => (
     >
       <Routes>
         <Route path="/" element={<Home />} index />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<UserHome />}>
+        <Route
+          path="/login"
+          element={
+            !localStorage.getItem("token") ? (
+              <Login />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            !localStorage.getItem("token") ? (
+              <Signup />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            localStorage.getItem("token") ? (
+              <UserHome />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
           <Route index element={<Dashboard />} />
           <Route path="devices" element={<Devices />} />
           <Route path="statistics" element={<Statistics />} />

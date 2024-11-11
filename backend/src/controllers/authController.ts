@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import axios from "axios";
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,6 @@ const signin: any = async (req: Request, res: Response) => {
   if (!username || !password)
     return res.status(403).json({ msg: "Missing email or password" });
   try {
-    console.log("1"+username+password);
     const user = await prisma.user.findFirst({
       where: {
         userName: username,
@@ -20,28 +19,12 @@ const signin: any = async (req: Request, res: Response) => {
       return res.status(401).json({ msg: "Email or password is incorrect." });
     }
 
-    console.log("2");
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    console.log("3");
     if (!isPasswordValid) {
       return res.status(401).json({ msg: "Email or password is incorrect." });
     }
-    console.log("4");
-    const token = jwt.sign(
-      { id: user.userId, name: user.userName },
-      process.env.JWT_SECRET as string
-    );
-    console.log("5");
-    res
-      .cookie("token", token, {
-        sameSite: "strict",
-        maxAge: 3600 * 24 * 1000,
-      })
-      .status(200)
-      .json({
-        msg: "Success!",
-      });
+    res.status(200).json({username,token:user.oAuthToken});
   } catch (error: any) {
     res.status(500).json({ msg: "Error: " + error.message });
   }
@@ -52,7 +35,6 @@ const signup: any = async (req: Request, res: Response) => {
   const userDetails = {
     username: body.username,
     password: body.password,
-    token: body.token,
   };
   try {
     const response = await prisma.user.findFirst({
@@ -76,7 +58,7 @@ const signup: any = async (req: Request, res: Response) => {
       data: {
         userName: userDetails.username,
         password: hash,
-        oAuthToken: userDetails.token,
+        oAuthToken: ""
       },
     });
   } catch (err) {
@@ -89,7 +71,7 @@ const signup: any = async (req: Request, res: Response) => {
     msg: "user added",
   });
 };
-const deleteUser:any = async (req: Request, res: Response) => {
+const deleteUser: any = async (req: Request, res: Response) => {
   const { username } = req.body;
   try {
     const user = await prisma.user.findFirst({
@@ -112,5 +94,34 @@ const deleteUser:any = async (req: Request, res: Response) => {
     res.status(500).json({ msg: error.message });
   }
 };
-
-export { signup, signin,deleteUser };
+const verifyToken: any = async (req: Request, res: Response) => {
+  const token = req.body.token;
+  const username = req.body.username;
+  try {
+    const response = await axios.get(`${process.env.SMARTTHINGS_BASE_URL}/devices`, {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    });
+    if (response.status === 200) {
+      const user = await prisma.user.findFirst({
+        where: {
+          userName: username
+        }
+      })
+      await prisma.user.update({
+        where: {
+          userId: user?.userId,
+        },
+        data: {
+          oAuthToken: token,
+        },
+      });
+      return res.status(200).json({ msg: "Token verified successfully." });
+    }
+    return res.status(400).json({ msg: "Token is not valid." });
+  } catch (error: any) {
+    return res.status(500).json(error.message);
+  }
+}
+export { signup, signin, deleteUser, verifyToken };

@@ -57,8 +57,6 @@ const getEnergy = async (req: Request, res: Response) => {
   const deviceId = req.body.deviceId;
   const userId = req.body.userId;
   const deviceName = req.body.deviceName;
-  console.log(deviceId);
-  console.log(token);
   try {
     const devices = await axios.get(
       `${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`,
@@ -68,7 +66,6 @@ const getEnergy = async (req: Request, res: Response) => {
         },
       }
     );
-    console.log("1");
     const energy =
       devices.data.components.main.powerConsumptionReport.powerConsumption.value
         .deltaEnergy;
@@ -79,7 +76,6 @@ const getEnergy = async (req: Request, res: Response) => {
         deviceId: deviceId,
       },
     });
-    console.log("2");
     console.log(device);
     const updatedPowerArray = device?.power
       ? [...device.power, energy]

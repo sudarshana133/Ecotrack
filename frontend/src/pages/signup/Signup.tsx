@@ -8,8 +8,6 @@ import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -20,26 +18,33 @@ const Signup = () => {
     const passwordValue = formData.get("password") as string;
 
     if (!usernameValue || !passwordValue) return;
-
-    setUsername(usernameValue);
-    setPassword(passwordValue);
-    console.log(usernameValue, passwordValue);
-    setIsModalOpen(true);
+    try {
+      await axios.post(`${BACKEND_URL}/auth/signup`, {
+        username: usernameValue,
+        password: passwordValue,
+      });
+      localStorage.setItem("username", usernameValue);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleTokenSubmit = async (submittedToken: string) => {
     try {
-      const res = await axios.post(`${BACKEND_URL}/auth/signup`, {
-        username,
-        password,
+      const response = await axios.post(`${BACKEND_URL}/auth/verifyToken`, {
         token: submittedToken,
+        username: localStorage.getItem("username"),
       });
-      console.log(res.data);
+      if (response.status === 200) {
+        localStorage.setItem("token", submittedToken);
+        navigate("/dashboard");
+      } else {
+        console.log("Token verification failed");
+      }
     } catch (error) {
       console.log(error);
     }
-    localStorage.setItem("token", submittedToken);
-    navigate("/dashboard");
   };
 
   return (
@@ -54,7 +59,11 @@ const Signup = () => {
         </div>
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center gap-8 p-4">
           <div>
-            <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="logo" className="max-w-[200px]" />
+            <img
+              src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`}
+              alt="logo"
+              className="max-w-[200px]"
+            />
           </div>
           <div className="w-full max-w-[400px]">
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

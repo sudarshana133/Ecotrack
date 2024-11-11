@@ -1,9 +1,9 @@
-import axios from "axios";
 import { Router } from "express";
-import { signup, signin, deleteUser } from "../controllers/authController";
+import { signup, signin, deleteUser, verifyToken } from "../controllers/authController";
 
 const authRouter = Router();
 authRouter.post("/signup", signup);
 authRouter.post("/signin", signin);
-authRouter.delete("/delete",deleteUser)
+authRouter.post("/verifyToken",verifyToken);
+authRouter.delete("/delete",deleteUser);
 export { authRouter };

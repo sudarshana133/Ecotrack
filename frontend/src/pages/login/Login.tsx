@@ -4,30 +4,34 @@ import { Card, CardHeader, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const navigate = useNavigate();
-  const handleSubmit = async(e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.post(`${BACKEND_URL}/auth/signin`,{
+      const res = await axios.post(`${BACKEND_URL}/auth/signin`, {
         username,
-        password
+        password,
       });
-      navigate("/dashboard");
+      localStorage.setItem("username", res.data.username);
+      localStorage.setItem("token", res.data.token);
+      window.location.reload();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 px-4 py-6">
-      <img src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`} alt="Logo" className="w-32 mb-6" />
+      <img
+        src={`https://cdn-85t93yhaveqs.vultrcdn.com/logo.png`}
+        alt="Logo"
+        className="w-32 mb-6"
+      />
       <Card className="w-full max-w-md bg-white shadow-lg rounded-lg">
         <CardHeader>
           <h2 className="text-center text-2xl font-semibold text-gray-700">
