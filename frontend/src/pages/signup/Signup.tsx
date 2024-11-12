@@ -9,7 +9,7 @@ const Signup = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
   const navigate = useNavigate();
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ const Signup = () => {
 
     if (!usernameValue || !passwordValue) return;
     try {
-      await axios.post(`${BACKEND_URL}/auth/signup`, {
+      await axios.post(`http://139.84.210.156/auth/signup`, {
         username: usernameValue,
         password: passwordValue,
       });
@@ -32,7 +32,7 @@ const Signup = () => {
 
   const handleTokenSubmit = async (submittedToken: string) => {
     try {
-      const response = await axios.post(`${BACKEND_URL}/auth/verifyToken`, {
+      const response = await axios.post(`http://139.84.210.156/auth/verifyToken`, {
         token: submittedToken,
         username: localStorage.getItem("username"),
       });

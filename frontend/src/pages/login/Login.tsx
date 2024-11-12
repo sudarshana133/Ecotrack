@@ -9,11 +9,11 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const IMAGE_URL = import.meta.env.VITE_CDN_IMAGE_URL
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${BACKEND_URL}/auth/signin`, {
+      const res = await axios.post(`http://139.84.210.156/auth/signin`, {
         username,
         password,
       });

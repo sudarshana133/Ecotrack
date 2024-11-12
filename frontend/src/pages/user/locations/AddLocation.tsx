@@ -9,7 +9,7 @@ const AddLocation = () => {
   const [longitude, setLongitude] = useState("");
   const [name, setName] = useState("");
   const [locationError, setLocationError] = useState("");
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+//   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
   useEffect(() => {
     if (navigator.geolocation) {
@@ -40,7 +40,7 @@ const AddLocation = () => {
     }
     try {
       await axios.post(
-        `${BACKEND_URL}/location/addLocation`,
+        `http://139.84.210.156/location/addLocation`,
         {
           latitude,
           longitude,

@@ -4,6 +4,7 @@ import { Device } from "@/types/DeviceType";
 import DeviceCard from "@/components/DeviceCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+// 665d67b2-1a68-45be-985a-f49a7e787e96
 const Devices = () => {
   const [devices, setDevices] = useState<Device[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

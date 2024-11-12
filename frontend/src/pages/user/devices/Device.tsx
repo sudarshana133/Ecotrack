@@ -9,13 +9,13 @@ const DeviceFromId = () => {
   const { deviceId } = useParams();
   const [device, setDevice] = useState<Device | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
 
   const getDevice = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BACKEND_URL}/device/${deviceId}`, {
+      const res = await axios.get(`http://139.84.210.156/device/${deviceId}`, {
         headers: {
           token,
         },

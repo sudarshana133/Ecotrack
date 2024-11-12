@@ -16,14 +16,14 @@ const Locations = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
 
   // Function to fetch locations from the backend
   const getLocations = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${BACKEND_URL}/location/locations`, {
+      const res = await axios.get(`http://139.84.210.156/location/locations`, {
         headers: { token },
       });
       setLocations(res.data.items);
@@ -39,7 +39,7 @@ const Locations = () => {
     setIsDelete(false);
     try {
       await axios.delete(
-        `${BACKEND_URL}/location/deleteLocation/${locationId}`,
+        `http://139.84.210.156/location/deleteLocation/${locationId}`,
         {
           headers: { token },
         }
@@ -80,10 +80,10 @@ const Locations = () => {
                   {location.name}
                 </h2>
                 <p className="text-sm text-gray-500 mb-1">
-                  Country Code: {location.countryCode}
+                  Country Code: IN
                 </p>
                 <p className="text-sm text-gray-500">
-                  Time Zone: {location.timeZoneId}
+                  Time Zone: IST
                 </p>
                 <div className="mt-4 flex flex-col gap-2">
                   <Button

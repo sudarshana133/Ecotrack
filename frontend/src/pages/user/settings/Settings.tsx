@@ -1,35 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Settings = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      setIsLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          navigate("/login");
-          return;
-        }
-        const response = await axios.get(`${BACKEND_URL}/auth/user`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUsername(response.data.userName);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchUserDetails();
-  }, []);
+  const username = localStorage.getItem("username");
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  
 
   const handleDeleteAccount = async () => {
     if (window.confirm("Are you sure you want to delete your account?")) {
@@ -40,7 +18,7 @@ const Settings = () => {
           navigate("/login");
           return;
         }
-        await axios.delete(`${BACKEND_URL}/auth/delete`, {
+        await axios.delete(`http://139.84.210.156/auth/delete`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -10,13 +10,13 @@ interface DeviceCardProps {
 }
 
 const DeviceCard: FC<DeviceCardProps> = ({ device }) => {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const handlePower = async () => {
     try {
       const res = await axios.post(
-        `${BACKEND_URL}/device/power`,
+        `http://139.84.210.156/device/power`,
         {
           deviceId: device.deviceId,
           power: false,

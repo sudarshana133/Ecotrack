@@ -11,22 +11,6 @@ export const getLocations:any = async (req: Request, res: Response) => {
             }
         });
         const items = response.data.items;
-        await Promise.all(
-            items.map(async (item: any) => {
-                await prisma.location.upsert({
-                    where: {
-                        locationId: item.locationId,
-                    },
-                    update: {
-                        name: item.name,
-                    },
-                    create: {
-                        locationId: item.locationId,
-                        name: item.name,
-                    },
-                });
-            })
-        );
         res.status(200).json(response.data);
     } catch (error: any) {
         console.log(error)
