@@ -1,34 +1,46 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Device } from "@/types/DeviceType";
 import DeviceCard from "@/components/DeviceCard";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 const Devices = () => {
-  const [devices,setDevices] = useState<Device[]>([]);
-  const [loading,setLoading] = useState<boolean>(false);
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const username = localStorage.getItem("username");
   const token = localStorage.getItem("token");
-  const getDevices = async()=>{
+  const getDevices = async () => {
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:8000/device/getDevices",{
-        username:"svsdev"
-      },{
-        headers:{
-          token
+      const res = await axios.post(
+        "http://localhost:8000/device/getDevices",
+        {
+          username,
         },
-      });
+        {
+          headers: {
+            token,
+          },
+        }
+      );
       setDevices(res.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setLoading(false);
     }
-  }
-  useEffect(()=>{
+  };
+  useEffect(() => {
     getDevices();
-  },[])
+  }, []);
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">My Devices</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">My Devices</h1>
+        <Button>
+          Add device <Plus />
+        </Button>
+      </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -45,7 +57,7 @@ const Devices = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Devices
+export default Devices;

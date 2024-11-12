@@ -41,7 +41,7 @@ const getDevices = async (req: Request, res: Response) => {
           create: {
             deviceId: item.deviceId,
             deviceName: item.label,
-            userId: user.userId,
+            locationId: item.locationId
           },
         });
       })
@@ -55,7 +55,7 @@ const getDevices = async (req: Request, res: Response) => {
 const getEnergy = async (req: Request, res: Response) => {
   const token = req.body.token;
   const deviceId = req.body.deviceId;
-  const userId = req.body.userId;
+  const locationId = req.body.locationId;
   const deviceName = req.body.deviceName;
   try {
     const devices = await axios.get(
@@ -92,7 +92,7 @@ const getEnergy = async (req: Request, res: Response) => {
         deviceId: deviceId,
         energy: [energy],
         deviceName,
-        userId: Number(userId),
+        locationId
       },
     });
     console.log("3");
@@ -103,35 +103,53 @@ const getEnergy = async (req: Request, res: Response) => {
 };
 
 const getLeaders = async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany({
-    include: {
-      devices: true,
-    },
-  });
+  try {
+    // Fetch locations and include related user and devices
+    const locations = await prisma.location.findMany({
+      include: {
+        user: true, // Include related user information
+        devices: true, // Include related devices
+      },
+    });
 
-  const response: any = await axios.get(
-    "https://api.electricitymap.org/v3/carbon-intensity/latest?zone=IN-SO' \
-        -H 'auth-token:UF77C0UwKFdnN"
-  );
-  const carbonPerRegion = response.carbonIntensity;
-  let result: any = [];
+    // Make the request to the Electricity Map API
+    const response = await axios.get(
+      'https://api.electricitymap.org/v3/carbon-intensity/latest?zone=IN-SO',
+      {
+        headers: {
+          'auth-token': 'UF77C0UwKFdnN',
+        },
+      }
+    );
 
-  for (let i = 0; i < users.length; i++) {
-    let temp = 0;
-    for (let j = 0; j < users[i].devices.length; j++) {
-      let energyArr = users[i].devices[j].energy;
-      temp += energyArr[energyArr.length - 1];
+    const carbonIntensity = response.data.carbonIntensity; // Corrected property access
+    let result: any = [];
+
+    // Iterate over locations and calculate energy used
+    for (let i = 0; i < locations.length; i++) {
+      let totalEnergyUsed = 0;
+      for (let j = 0; j < locations[i].devices.length; j++) {
+        let energyArr = locations[i].devices[j].energy;
+        totalEnergyUsed += energyArr[energyArr.length - 1] || 0; // Safely access the last energy value
+      }
+
+      // Construct the result object
+      result[i] = {
+        name: locations[i].user?.userName || 'Unknown', // Safely access userName
+        id: locations[i].user?.userId || 'Unknown', // Safely access userId
+        energyUsed: totalEnergyUsed * carbonIntensity,
+      };
     }
-    result[i] = {
-      name: users[i].userName,
-      id: users[i].userId,
-      energyUsed: temp * carbonPerRegion,
-    };
+
+    // Sort results by energy used in descending order
+    result.sort((a: any, b: any) => b.energyUsed - a.energyUsed);
+
+    // Return the sorted results as JSON
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching leaders:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  result.sort((a: any, b: any) => b.energyUsed - a.energyUsed);
-
-  res.json(result);
 };
 
 const PowerOnAndOff: any = async (req: Request, res: Response) => {
@@ -180,5 +198,28 @@ const getDevice: any = async (req: Request, res: Response) => {
     res.status(500).json({ msg: error.message });
   }
 };
-
-export { getDevices, getEnergy, getLeaders, PowerOnAndOff,getDevice };
+const addDevice: any = async (req: Request, res: Response) => {
+  const data = req.body;
+  if (!data.locationId || !data.profileId || !data.installedAppId) {
+    return res.status(404).json("Complete data must be provided");
+  }
+  try {
+    const response = await axios.post(`${process.env.SMARTTHINGS_BASE_URL}/devices`, {
+      locationId: data.locationId,
+      profileId: data.profileId,
+      installedAppId: data.installedAppId,
+    });
+    console.log(response.data);
+    await prisma.device.create({
+      data: {
+        deviceId: response.data.deviceId,
+        deviceName: response.data.label,
+        locationId: data.locationId,
+      },
+    });
+    res.status(200).json(response.data);
+  } catch (error: any) {
+    res.status(500).json(error.message)
+  }
+}
+export { getDevices, getEnergy, getLeaders, PowerOnAndOff, getDevice, addDevice };

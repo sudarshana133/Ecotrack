@@ -8,21 +8,30 @@ datasource db {
 }
 
 model User {
-  userId     Int      @id @default(autoincrement())
+  userId     Int        @id @default(autoincrement())
   userName   String
-  oAuthToken String   
-  password    String
-  devices    Device[]
+  oAuthToken String
+  password   String
+  locations  Location[]
+}
+
+model Location {
+  locationId  String   @id @unique
+  name        String
+  devices     Device[]
+  countryCode String   @default("")
+  timeZoneId  String   @default("")
+  userId      Int?
+  user        User?    @relation(fields: [userId], references: [userId])
 }
 
 model Device {
-  deviceId   String @id
-  userId     Int
+  deviceId   String   @id
   deviceName String
-  power      Int[]  @default([])
-  energy     Int[]  @default([])
-  location   Int[]  @default([])
-  user       User   @relation(fields: [userId], references: [userId])
+  power      Int[]    @default([])
+  energy     Int[]    @default([])
+  locationId String
+  location   Location @relation(fields: [locationId], references: [locationId])
 }
 
 model Power {

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getDevice = exports.PowerOnAndOff = exports.getLeaders = exports.getEnergy = exports.getDevices = void 0;
+exports.addDevice = exports.getDevice = exports.PowerOnAndOff = exports.getLeaders = exports.getEnergy = exports.getDevices = void 0;
 const axios_1 = __importDefault(require("axios"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
@@ -47,7 +47,7 @@ const getDevices = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 create: {
                     deviceId: item.deviceId,
                     deviceName: item.label,
-                    userId: user.userId,
+                    locationId: item.locationId
                 },
             });
         })));
@@ -61,7 +61,7 @@ exports.getDevices = getDevices;
 const getEnergy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.body.token;
     const deviceId = req.body.deviceId;
-    const userId = req.body.userId;
+    const locationId = req.body.locationId;
     const deviceName = req.body.deviceName;
     try {
         const devices = yield axios_1.default.get(`${process.env.SMARTTHINGS_BASE_URL}/devices/${deviceId}/status`, {
@@ -94,7 +94,7 @@ const getEnergy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 deviceId: deviceId,
                 energy: [energy],
                 deviceName,
-                userId: Number(userId),
+                locationId
             },
         });
         console.log("3");
@@ -106,36 +106,53 @@ const getEnergy = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getEnergy = getEnergy;
 const getLeaders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield prisma.user.findMany({
-        include: {
-            devices: true,
-        },
-    });
-    const response = yield axios_1.default.get("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=IN-SO' \
-        -H 'auth-token:UF77C0UwKFdnN");
-    const carbonPerRegion = response.carbonIntensity;
-    let result = [];
-    for (let i = 0; i < users.length; i++) {
-        let temp = 0;
-        for (let j = 0; j < users[i].devices.length; j++) {
-            let energyArr = users[i].devices[j].energy;
-            temp += energyArr[energyArr.length - 1];
+    var _a, _b;
+    try {
+        // Fetch locations and include related user and devices
+        const locations = yield prisma.location.findMany({
+            include: {
+                user: true, // Include related user information
+                devices: true, // Include related devices
+            },
+        });
+        // Make the request to the Electricity Map API
+        const response = yield axios_1.default.get('https://api.electricitymap.org/v3/carbon-intensity/latest?zone=IN-SO', {
+            headers: {
+                'auth-token': 'UF77C0UwKFdnN',
+            },
+        });
+        const carbonIntensity = response.data.carbonIntensity; // Corrected property access
+        let result = [];
+        // Iterate over locations and calculate energy used
+        for (let i = 0; i < locations.length; i++) {
+            let totalEnergyUsed = 0;
+            for (let j = 0; j < locations[i].devices.length; j++) {
+                let energyArr = locations[i].devices[j].energy;
+                totalEnergyUsed += energyArr[energyArr.length - 1] || 0; // Safely access the last energy value
+            }
+            // Construct the result object
+            result[i] = {
+                name: ((_a = locations[i].user) === null || _a === void 0 ? void 0 : _a.userName) || 'Unknown', // Safely access userName
+                id: ((_b = locations[i].user) === null || _b === void 0 ? void 0 : _b.userId) || 'Unknown', // Safely access userId
+                energyUsed: totalEnergyUsed * carbonIntensity,
+            };
         }
-        result[i] = {
-            name: users[i].userName,
-            id: users[i].userId,
-            energyUsed: temp * carbonPerRegion,
-        };
+        // Sort results by energy used in descending order
+        result.sort((a, b) => b.energyUsed - a.energyUsed);
+        // Return the sorted results as JSON
+        res.json(result);
     }
-    result.sort((a, b) => b.energyUsed - a.energyUsed);
-    res.json(result);
+    catch (error) {
+        console.error('Error fetching leaders:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 exports.getLeaders = getLeaders;
 const PowerOnAndOff = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.headers.token;
     const { deviceId, power } = req.body;
     try {
-        const response = yield axios_1.default.post(`https://api.smartthings.com/v1/devices/${deviceId}/commands`, {
+        const response = yield axios_1.default.post(`${process.env.SMARTTHINGS_BASE_URL}/${deviceId}/commands`, {
             commands: [
                 {
                     component: "main",
@@ -173,3 +190,29 @@ const getDevice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getDevice = getDevice;
+const addDevice = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = req.body;
+    if (!data.locationId || !data.profileId || !data.installedAppId) {
+        return res.status(404).json("Complete data must be provided");
+    }
+    try {
+        const response = yield axios_1.default.post(`${process.env.SMARTTHINGS_BASE_URL}/devices`, {
+            locationId: data.locationId,
+            profileId: data.profileId,
+            installedAppId: data.installedAppId,
+        });
+        console.log(response.data);
+        yield prisma.device.create({
+            data: {
+                deviceId: response.data.deviceId,
+                deviceName: response.data.label,
+                locationId: data.locationId,
+            },
+        });
+        res.status(200).json(response.data);
+    }
+    catch (error) {
+        res.status(500).json(error.message);
+    }
+});
+exports.addDevice = addDevice;

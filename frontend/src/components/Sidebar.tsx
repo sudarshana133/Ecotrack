@@ -1,4 +1,4 @@
-import { Home, BarChart2, Bell, Settings, LogOut } from "lucide-react";
+import { Home, BarChart2, LogOut, MapPin, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
@@ -6,8 +6,7 @@ const Sidebar = () => {
   const menuItems = [
     { icon: Home, text: "Overview", path: "/dashboard" },
     { icon: BarChart2, text: "Statistics", path: "/dashboard/statistics" },
-    { icon: BarChart2, text: "Devices", path: "/dashboard/devices" },
-    { icon: Bell, text: "Notifications", path: "/dashboard/notifications" },
+    { icon: MapPin, text: "Locations", path: "/dashboard/locations" },
   ];
 
   const bottomMenuItems = [

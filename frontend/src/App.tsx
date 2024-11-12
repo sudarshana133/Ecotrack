@@ -15,6 +15,8 @@ const Home = lazy(() => import("./pages/landing/Landing"));
 const Signup = lazy(() => import("./pages/signup/Signup"));
 const Device = lazy(() => import("./pages/user/devices/Device"));
 const Settings = lazy(() => import("./pages/user/settings/Settings"));
+const Locations = lazy(() => import("./pages/user/locations/Locations"));
+const AddLocation = lazy(() => import("./pages/user/locations/AddLocation"));
 const App: React.FC = () => (
   <Router>
     <Suspense
@@ -57,10 +59,12 @@ const App: React.FC = () => (
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="devices" element={<Devices />} />
+          <Route path="devices/:locationId" element={<Devices />} />
           <Route path="statistics" element={<Statistics />} />
-          <Route path="devices/:deviceId" element={<Device />} />
+          <Route path="devices/:locationId/:deviceId" element={<Device />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="locations" element={<Locations />} />
+          <Route path="addLocation" element={<AddLocation />} />
         </Route>
       </Routes>
     </Suspense>
